@@ -1,0 +1,22 @@
+/* css/variables.css */
+:root {
+    /* Brand & Accent Colors */
+    --color-primary: #4f46e5;          /* The active purple/blue from the nav */
+    --color-accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --color-accent-blue: #3b82f6;       /* The blue for today's date */
+  
+    /* Semantic Colors */
+    --color-success: #10b981;
+    --color-success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --color-error: #ef4444;
+  
+    /* Neutral & Text Colors */
+    --color-light: #ffffff;
+    --color-dark: #1f2937;
+    --color-gray-100: #f3f4f6;   /* Main background */
+    --color-gray-200: #e5e7eb;   /* Borders */
+    --color-gray-300: #d1d5db;   /* Light text */
+    --color-gray-400: #9ca3af;   /* Icon/subtle text */
+    --color-gray-500: #6b7280;   /* Subtitles */
+    --color-gray-600: #374151;   /* Hover backgrounds */
+  }

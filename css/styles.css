@@ -1,0 +1,713 @@
+/* Add these CSS custom properties at the very top of your styles.css */
+:root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 60px;
+    --transition-duration: 0.3s;
+}
+
+/* Improve the sidebar transitions */
+.sidebar {
+    transition: width var(--transition-duration) ease-in-out;
+}
+
+.main-content {
+    transition: margin-left var(--transition-duration) ease-in-out;
+}
+
+/* Better focus indicators for accessibility */
+.sidebar-toggle:focus,
+.nav-item:focus {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}
+/* Custom styles for the calendar */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0; /* Remove padding */
+}
+/* Prevents body scrolling when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+.calendar-container-wrapper {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: none; /* Remove max-width constraint */
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem; /* Add margin instead of body padding */
+}
+
+/* Custom spacing for the calendar header */
+.calendar-header-spacing {
+    margin-bottom: 10px; /* 10px padding between header and grid */
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+    /* No gap */
+}
+.day-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0.25rem; /* Reduced padding for smaller text */
+    text-align: center;
+    font-weight: 500;
+    color: #1f2937; /* Darker text for better contrast */
+    font-size: 0.75rem; /* text-xs equivalent (12px) */
+    text-transform: uppercase;
+    background-color: #e0e0e0; /* Match border color */
+}
+.date-cell {
+    background-color: #ffffff; /* Default white background for all date cells */
+    transition: background-color 0.1s ease-in-out; /* Smooth transition for hover */
+    cursor: pointer; /* Indicate clickable */
+    border: none; /* No borders for cells */
+    border-bottom: 1px solid #f0f0f0; /* Subtle horizontal separator */
+    border-right: 1px solid #f0f0f0; /* Subtle vertical separator */
+    min-height: 6rem; /* Increased min-height for more content */
+    display: flex;
+    flex-direction: column;
+    padding: 5px; /* Adjusted padding to 5px */
+    align-items: flex-start; /* Align content to the start (left) */
+    justify-content: flex-start; /* Align content to the start (top) */
+    position: relative; /* For absolute positioning of top-right elements if needed */
+}
+.date-cell:hover {
+    background-color: #f9fafb; /* Lighter background on hover */
+}
+.date-cell.current-month {
+    background-color: #ffffff; /* Changed to white */
+    color: #1f2937; /* Darker text for current month dates */
+    opacity: 1; /* Full visibility for current month */
+}
+.date-cell.other-month {
+    color: #d1d5db; /* Even lighter text for dates from other months */
+    background-color: #f0f0f0; /* Grey background for other month dates */
+    opacity: 0.4; /* Reduced visibility for other months */
+}
+
+/* Remove right border for last column cells */
+.calendar-grid .date-cell:nth-child(7n) {
+    border-right: none;
+}
+/* Remove bottom border for last row cells */
+.calendar-grid .date-cell:nth-last-child(-n + 7) {
+    border-bottom: none;
+}
+
+
+.date-and-cashflow {
+    display: flex;
+    align-items: baseline; /* Align date number and cashflow text */
+    gap: 0.25rem; /* Small gap between date and cashflow */
+    margin-bottom: 0.5rem; /* Space below this row */
+}
+
+.date-number {
+    font-size: 0.75rem; /* text-xs equivalent (12px) - Made smaller */
+    font-weight: 500;
+    color: #9ca3af; /* Lighter grey for date numbers - Made more subtle */
+    padding: 0.125rem 0.25rem; /* Padding for non-today dates */
+}
+
+/* Styling for today's date number: blue text, with round background blue color */
+.today-date-number {
+    background-color: #3b82f6; /* Blue background for today's date number */
+    color: #ffffff !important; /* White text for today's date number */
+    font-weight: 700; /* Bold for today's date number */
+    border-radius: 50%; /* Make it circular */
+    width: 1.75rem; /* Adjusted width for the circle */
+    height: 1.75rem; /* Adjusted height for the circle */
+    display: flex; /* Use flex to center content */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    box-shadow: 0 1px 3px rgba(59, 130, 246, 0.2); /* Subtle shadow for the circle */
+    padding: 0; /* Override default padding for circular shape */
+    font-size: 0.75rem; /* Explicitly set font size to match other dates */
+}
+
+.cashflow-amount {
+    font-size: 0.75rem; /* text-xs equivalent (12px) - Made smaller */
+    font-weight: 600;
+    margin-left: auto; /* Pushes cashflow to the right if in a flex container */
+}
+.cashflow-positive {
+    color: #10b981; /* Green color for positive cashflow */
+}
+.cashflow-negative {
+    color: #ef4444; /* Red color for negative cashflow */
+}
+.cashflow-neutral {
+    color: #4b5563; /* Gray/dark color for neutral cashflow */
+}
+
+/* Labels (Payable, Target, Task) */
+/* Labels (Payable, Target, Task) */
+.day-label {
+    font-size: 0.75rem; /* text-xs equivalent (12px) */
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-top: 0.125rem; /* Small gap between multiple labels */
+    margin-bottom: 0.125rem; /* Small gap between multiple labels */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    width: calc(100% - 10px); /* Full width minus the cell padding */
+    margin-left: 0; /* Remove auto margins */
+    margin-right: 0; /* Remove auto margins */
+    text-align: center; /* Center the text */
+}
+
+.payable-label, .target-label {
+    background-color: #f5f5f5; /* Light grey background */
+    color: #1f2937; /* Dark text for contrast */
+    font-weight: 500;
+}
+
+.task-label {
+    background-color: #e0f2fe; /* Light blue background for tasks */
+    color: #0369a1; /* Darker blue text for tasks */
+    font-weight: 500;
+}
+
+.task-label-all-completed {
+    background-color: #d1fae5; /* Light green background for all completed tasks */
+    color: #065f46; /* Darker green text */
+}
+
+.payable-label, .target-label {
+    background-color: #f5f5f5; /* Light grey background */
+    color: #1f2937; /* Dark text for contrast */
+    font-weight: 500;
+}
+
+.task-label {
+    background-color: #e0f2fe; /* Light blue background for tasks */
+    color: #0369a1; /* Darker blue text for tasks */
+}
+
+.task-label-all-completed {
+    background-color: #d1fae5; /* Light green background for all completed tasks */
+    color: #065f46; /* Darker green text */
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: hidden; /* Prevent content scroll behind modal */
+    background-color: rgba(0,0,0,0.0); /* Start with transparent background */
+    transition: background-color 0.3s ease-out; /* Transition for background */
+    justify-content: flex-end; /* Push content to the right */
+    align-items: center; /* Vertically center */
+}
+
+/* Class to show the modal and trigger background transition */
+.modal.is-active {
+    display: flex; /* Use flex for centering/alignment */
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 0; /* No border-radius for slide-in from side */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 90%;
+    max-width: 400px;
+    height: 100vh; /* Make it full height */
+    display: flex; /* Enable flexbox for vertical layout */
+    flex-direction: column; /* Stack children vertically */
+    gap: 1rem;
+    
+    /* Make the entire modal content scrollable */
+    overflow-y: auto; 
+
+    /* Slide-in effect */
+    transform: translateX(100%); /* Start off-screen to the right */
+    transition: transform 0.3s ease-out; /* Transition for slide */
+}
+
+/* Class to slide in the modal content */
+.modal.is-active .modal-content {
+    transform: translateX(0); /* Slide into view */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.modal-header h3 {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: #1f2937;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form section - allow it to grow but not shrink */
+.modal-form-section {
+    flex-shrink: 0; /* Prevent this section from shrinking */
+    /* No max-height or overflow-y here, as entire modal scrolls */
+    /* Removed padding-bottom and border-bottom, moved to modal-actions */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem; /* text-sm */
+}
+
+.form-group input[type="number"],
+.form-group input[type="text"],
+.form-group select,
+.form-group input[type="date"],
+.form-group textarea { /* Added textarea */
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: #1f2937;
+    background-color: #f9fafb;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-bottom: 1rem; /* Add padding below buttons */
+    border-bottom: 1px solid #e5e7eb; /* Add border below buttons */
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.modal-actions button {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.modal-actions .add-btn {
+    background-color: #3b82f6; /* Blue */
+    color: #ffffff;
+    border: none;
+}
+.modal-actions .add-btn:hover {
+    background-color: #2563eb; /* Darker Blue */
+}
+
+.modal-actions .close-btn {
+    background-color: #e5e7eb; /* Light Gray */
+    color: #4b5563;
+    border: none;
+}
+.modal-actions .close-btn:hover {
+    background-color: #d1d5db; /* Darker Light Gray */
+}
+
+#user-id-display {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Styles for the list of entries in the modal */
+.entries-list-container {
+    flex-grow: 1; /* Allow this container to take up available space */
+    padding-top: 1rem; /* Add padding to the top of the list itself */
+    /* Removed overflow-y: auto here, as it's on modal-content now */
+}
+
+.entries-list-container h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+}
+
+.entry-category-heading {
+    font-size: 0.9rem; /* Slightly smaller than main h4 */
+    font-weight: 600;
+    color: #4b5563; /* Slightly lighter than main h4 */
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.entry-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #e5e7eb;
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563;
+    cursor: pointer; /* Indicate clickable for editing */
+    transition: background-color 0.1s ease-in-out;
+}
+.entry-item:hover {
+    background-color: #f0f0f0; /* Light hover effect for clickable entries */
+}
+
+.entry-item:last-child {
+    border-bottom: none;
+}
+
+.entry-item-details {
+    flex-grow: 1;
+}
+
+.entry-item-details strong {
+    text-transform: capitalize;
+    margin-right: 0.5rem;
+}
+
+.entry-item-delete-btn {
+    background-color: #fca5a5; /* Light red */
+    color: #7f1d1d; /* Dark red text */
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.1s ease-in-out;
+    margin-left: 0.5rem; /* Space from text */
+}
+
+.entry-item-delete-btn:hover {
+    background-color: #f87171; /* Slightly darker red */
+}
+
+/* New Styles for Balance Displays */
+.overall-balances-section {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    margin: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    width: calc(100% - 2rem); /* Account for margins */
+}
+
+.balance-card {
+    background-color: #ffffff; /* Changed from #f9fafb to white */
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    flex: 1; /* Allow cards to grow and shrink */
+    min-width: 200px; /* Minimum width for each card */
+    text-align: center;
+}
+.balance-card .balance-label {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+.balance-card .balance-amount {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.monthly-summary-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f3f4f6; /* Slightly darker background for this section */
+    border-radius: 0.75rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Inner shadow */
+}
+
+.summary-item {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    display: flex; /* Use flexbox for vertical alignment */
+    flex-direction: column; /* Stack label, amount, comparison */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+}
+.summary-item .summary-label {
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+.summary-item .summary-amount {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600;
+}
+.summary-amount.cash-in {
+    color: #10b981; /* Green */
+}
+.summary-amount.cash-out {
+    color: #ef4444; /* Red */
+}
+.summary-amount.total-payable {
+    color: #4f46e5; /* Indigo/Purple for payable */
+}
+/* New style for comparison text */
+.comparison-text {
+    font-size: 0.7rem; /* Even smaller text */
+    font-weight: 500;
+    margin-top: 0.25rem; /* Small margin above */
+    color: #6b7280; /* Default gray */
+    display: flex; /* Use flex to align arrow, percentage, and month name */
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Take full width for centering */
+}
+.comparison-text.positive {
+    color: #10b981; /* Green for positive */
+}
+.comparison-text.negative {
+    color: #ef4444; /* Red for negative */
+}
+.comparison-text .arrow {
+    margin-right: 0.25rem; /* Space between arrow and percentage */
+    display: inline-block; /* Ensure SVG respects margins */
+    vertical-align: middle; /* Align with text */
+}
+.comparison-text .month-name {
+    margin-left: 0.25rem; /* Space between percentage and month name */
+    color: #6b7280; /* Always gray for the month name */
+}
+
+/* New styles for Spending Insights Modal */
+#spendingInsightsModal .modal-content {
+    max-width: 500px; /* Wider for insights */
+    height: auto; /* Auto height based on content */
+    max-height: 90vh; /* Max height to prevent overflow on small screens */
+    border-radius: 1rem; /* Rounded corners for insights modal */
+    transform: translateY(-50%); /* Center vertically */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center horizontally and vertically */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth transition */
+    display: block; /* Change to block for standard modal centering */
+}
+#spendingInsightsModal.is-active .modal-content {
+    transform: translate(-50%, -50%); /* Center horizontally and vertically */
+    opacity: 1;
+}
+#spendingInsightsModal {
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Vertically center */
+    background-color: rgba(0,0,0,0.0); /* Start transparent */
+}
+#spendingInsightsModal.is-active {
+    background-color: rgba(0,0,0,0.4); /* Fade in background */
+}
+
+#spendingInsightsContent {
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.5;
+    text-align: left; /* Align text to left */
+}
+
+#spendingInsightsContent p {
+    margin-bottom: 0.75rem;
+}
+#spendingInsightsContent strong {
+    color: #1f2937;
+}
+#spendingInsightsContent ul {
+    list-style-type: disc;
+    margin-left: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+#spendingInsightsContent li {
+    margin-bottom: 0.25rem;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3b82f6; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* FORCE WIDER CALENDAR - Add this at the very bottom */
+.calendar-container-wrapper {
+    max-width: 1600px !important;
+    width: 95% !important;
+}
+
+.overall-balances-section {
+    max-width: 1600px !important;
+    width: 95% !important;
+}
+
+/* Make calendar even wider when sidebar is collapsed */
+.main-content.sidebar-collapsed .calendar-container-wrapper {
+    max-width: calc(100vw - 120px) !important;
+}
+
+.main-content.sidebar-collapsed .overall-balances-section {
+    max-width: calc(100vw - 120px) !important;
+}
+
+/* Also target the dashboard wrapper if it exists */
+.dashboard-wrapper {
+    max-width: 1600px !important;
+    width: 95% !important;
+}
+
+.main-content.sidebar-collapsed .dashboard-wrapper {
+    max-width: calc(100vw - 120px) !important;
+}
+
+/* --- CALENDAR TASK LABEL FIX --- */
+/* This rule targets the text part of a calendar task item specifically */
+/* to override any conflicting global styles. */
+.date-cell .task-item > span:last-child {
+    display: inline-block !important;
+    visibility: visible !important;
+    font-size: 11px !important; /* Made slightly smaller */
+    color: inherit !important;
+    flex-grow: 1 !important;
+    width: auto !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important; /* Added line-height */
+}
+/* ===================================================================
+   CALENDAR LABEL VISIBILITY FIX
+   Add this to the VERY BOTTOM of styles.css
+   =================================================================== */
+
+/* Force visibility for calendar info labels with maximum specificity */
+.calendar-container-wrapper .calendar-grid .date-cell .day-info-label {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+    
+    /* Ensure proper sizing */
+    font-size: 0.7rem !important; /* 11.2px */
+    font-weight: 500 !important;
+    padding: 0.125rem 0.375rem !important; /* 2px 6px */
+    border-radius: 0.25rem !important;
+    margin-top: 0.25rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    
+    /* Ensure it takes space */
+    width: auto !important;
+    min-width: fit-content !important;
+    height: auto !important;
+    min-height: 1rem !important;
+    
+    /* Remove any transforms or filters */
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Specific styling for payable labels */
+.calendar-container-wrapper .calendar-grid .date-cell .day-info-label.payable-label {
+    background-color: #FEF3C7 !important;
+    color: #92400E !important;
+}
+
+/* Specific styling for task labels */
+.calendar-container-wrapper .calendar-grid .date-cell .day-info-label.tasks-label {
+    background-color: #DBEAFE !important;
+    color: #1E40AF !important;
+}
+
+/* Specific styling for completed task labels */
+.calendar-container-wrapper .calendar-grid .date-cell .day-info-label.tasks-label-completed {
+    background-color: #D1FAE5 !important;
+    color: #065F46 !important;
+}
+
+/* Also ensure the parent container displays the labels */
+.calendar-container-wrapper .calendar-grid .date-cell > div {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Ensure any child divs or spans within labels are visible */
+.calendar-container-wrapper .calendar-grid .date-cell .day-info-label * {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Fix for inline date and amount layout */
+.date-cell .flex.justify-between {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+.date-cell .net-amount {
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+}

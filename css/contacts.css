@@ -1,0 +1,29 @@
+/* ===================================================================
+   contacts.css (Corrected Version)
+   
+   This file has been intentionally cleared of the old project-related styles
+   (like .project-card, .projects-header, etc.) because they were
+   conflicting with the new UI design.
+
+   This file can now be used for any future custom styles for the 
+   main contacts list page without causing layout issues.
+   =================================================================== */
+
+/* --- CSS RESET FOR PROJECT LIST --- */
+/* This ensures no old styles from other files can interfere. */
+#contact-projects-container .card {
+    all: unset; /* Resets all inherited styles */
+    display: block; /* Re-apply basic block styling */
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#contact-projects-container .card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.07);
+    border-color: #a5b4fc;
+}

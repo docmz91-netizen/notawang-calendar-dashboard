@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotaWang - Business Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/contacts.css">
+    <link rel="stylesheet" href="css/contacts-ui-fix.css">
+    
+    <style>
+    /* Additional styles can go here if needed */
+    .field-transition {
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+        max-height: 500px;
+        opacity: 1;
+    }
+    .field-hidden {
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    /* Slide-in animation for goal modal */
+    .sidebar-panel {
+        transition: transform 0.3s ease-in-out;
+    }
+    /* --- FIX: Width alignment for dashboard sections --- */
+    .overall-balances-section, .calendar-container-wrapper {
+        max-width: 1600px !important;
+        width: 95% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* NEW: Animation for Contact Form Modal */
+    .modal-overlay-active {
+        opacity: 1;
+    }
+
+    .modal-panel-active {
+        transform: translateX(0);
+    }
+    </style>
+    <!-- Add FullCalendar CDN -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">NW</div>
+                <span class="sidebar-brand-text">NotaWang</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path></svg>
+                <span class="nav-item-text">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="projects">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <span class="nav-item-text">Projects</span>
+            </a>
+            <a href="#" class="nav-item" data-page="contacts">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="nav-item-text">Contacts</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <div class="user-details">
+                    <div class="user-name">Business User</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content" id="main-content">
+        <div class="page-content active" id="dashboard-page">
+            <div class="dashboard-wrapper">
+                <!-- === ALIGNED 3-CARD LAYOUT (WITH REFINED GAP) === -->
+                <div class="overall-balances-section grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 mb-4">
+                    <!-- Card 1: Total Payable (Overall) -->
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-center justify-center">
+                        <h2 class="text-sm font-medium text-gray-500">Total Payable (Overall)</h2>
+                        <div id="overallTotalPayableDisplay" class="text-2xl font-semibold text-gray-800 mt-2"><span>RM0.00</span></div>
+                    </div>
+
+                    <!-- Card 2: Monthly Goal -->
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 relative">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-sm font-medium text-gray-500">Monthly Goal</h2>
+                            <button id="edit-goal-btn" class="text-gray-400 hover:text-indigo-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                        <div class="mt-4">
+                            <div class="bg-gray-200 rounded-full h-2 w-full">
+                                <div id="goal-progress-bar" class="bg-indigo-600 h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between items-baseline mt-2">
+                                <p id="goal-progress-text" class="text-base font-semibold text-gray-800">RM0</p>
+                                <p id="goal-target-text" class="text-xs font-medium text-gray-500">of RM0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Current Account Balance -->
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-center justify-center">
+                        <h2 class="text-sm font-medium text-gray-500">Current Account Balance</h2>
+                        <div id="currentAccountBalanceDisplay" class="text-2xl font-semibold text-gray-800 mt-2"><span>RM0.00</span></div>
+                    </div>
+                </div>
+
+                <div class="calendar-container-wrapper">
+                    <!-- Monthly Summary Cards Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <!-- Total Quotation (This Month) -->
+                        <div class="bg-[#f9f9f9] rounded-lg border border-gray-200 p-4">
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Total Quotation (This Month)</h3>
+                            <div id="monthlyQuotationDisplay">
+                                <span class="text-2xl font-bold text-gray-900">RM0.00</span>
+                                <!-- NEW: Placeholder for comparison -->
+                                <div id="quotationComparison" class="comparison-container text-xs mt-1 flex items-center"></div>
+                            </div>
+                        </div>
+
+                        <!-- Total Payable (This Month) -->
+                        <div class="bg-[#f9f9f9] rounded-lg border border-gray-200 p-4">
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Total Invoice (This Month)</h3>
+                            <div id="monthlyTotalPayableDisplay">
+                                <span class="text-2xl font-bold text-gray-900">RM0.00</span>
+                                <!-- NEW: Placeholder for comparison -->
+                                <div id="payableComparison" class="comparison-container text-xs mt-1 flex items-center"></div>
+                            </div>
+                        </div>
+
+                        <!-- Cash-In (This Month) -->
+                        <div class="bg-[#f9f9f9] rounded-lg border border-gray-200 p-4">
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Cash-In (This Month)</h3>
+                            <div id="monthlyCashInDisplay">
+                                <span class="text-2xl font-bold text-gray-900">RM0.00</span>
+                                <!-- NEW: Placeholder for comparison -->
+                                <div id="cashInComparison" class="comparison-container text-xs mt-1 flex items-center"></div>
+                            </div>
+                        </div>
+
+                        <!-- Cash-Out (This Month) -->
+                        <div class="bg-[#f9f9f9] rounded-lg border border-gray-200 p-4">
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">Cash-Out (This Month)</h3>
+                            <div id="monthlyCashOutDisplay">
+                                <span class="text-2xl font-bold text-gray-900">RM0.00</span>
+                                <!-- NEW: Placeholder for comparison -->
+                                <div id="cashOutComparison" class="comparison-container text-xs mt-1 flex items-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 mb-4 px-4">
+                        <button id="getSpendingInsightsBtn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out">✨ Get Spending Insights</button>
+                        <div class="flex items-center space-x-2">
+                            <button id="prevMonth" class="p-2 rounded-full text-gray-600 hover:bg-gray-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                            <h2 id="monthYear" class="text-xl font-semibold text-gray-800"></h2>
+                            <button id="nextMonth" class="p-2 rounded-full text-gray-600 hover:bg-gray-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                        </div>
+                    </div>
+                    <!-- FIX: Updated the calendar headers to start on Monday -->
+                    <div class="calendar-grid">
+                        <div class="day-header">Mon</div>
+                        <div class="day-header">Tue</div>
+                        <div class="day-header">Wed</div>
+                        <div class="day-header">Thu</div>
+                        <div class="day-header">Fri</div>
+                        <div class="day-header">Sat</div>
+                        <div class="day-header">Sun</div>
+                    </div>
+                    <div id="calendarDates" class="calendar-grid"></div>
+                    <div id="user-id-display" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content" id="projects-page">
+            <!-- Projects content will be rendered here by JS -->
+        </div>
+        <div class="page-content" id="contacts-page">
+            <!-- Contacts content will be rendered here by JS -->
+        </div>
+    </div>
+
+    <!-- Contact Form Sidebar Panel -->
+    <div id="contactFormModal" class="hidden fixed inset-0 z-50">
+        <div id="sidebarOverlay" class="absolute inset-0 bg-gray-900 bg-opacity-50 transition-opacity duration-300 ease-in-out opacity-0"></div>
+        <div id="contactSidebar" class="sidebar-panel fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-lg border-l border-gray-200 z-50 transform translate-x-full flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">Contact Details</h2>
+                <button id="contact-modal-close-btn" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 flex-grow overflow-y-auto">
+                <form id="newContactForm" class="space-y-4">
+                    <!-- Company Name -->
+                    <div>
+                        <label for="companyName" class="block text-sm font-medium text-gray-700">Company Name</label>
+                        <input type="text" name="companyName" id="companyName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="e.g., Acme Inc.">
+                    </div>
+                    <!-- Contact Person -->
+                    <div>
+                        <label for="contactPerson" class="block text-sm font-medium text-gray-700">Contact Person</label>
+                        <input type="text" name="contactPerson" id="contactPerson" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="e.g., John Doe">
+                    </div>
+                    <!-- Email Address -->
+                    <div>
+                        <label for="emailAddress" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" name="emailAddress" id="emailAddress" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="e.g., john@example.com">
+                    </div>
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="tel" name="phoneNumber" id="phoneNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" placeholder="e.g., +60123456789">
+                    </div>
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                <button id="cancel-contact-btn" type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button id="save-contact-btn" type="submit" form="newContactForm" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700">Save Contact</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- === DAILY ENTRY MODAL (RESTORED) === -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalDateTitle">Daily Overview</h3>
+                <span class="close-button" id="closeExpenseModalBtn">&times;</span> <!-- MODIFIED: Added ID -->
+            </div>
+            
+            <!-- NEW: Daily entries list container -->
+            <div class="modal-body-section">
+                <h4 class="mb-2">Entries for the day</h4>
+                <div id="currentDayEntriesList" class="space-y-3">
+                    <!-- Entries will be dynamically populated here -->
+                </div>
+            </div>
+
+            <div class="modal-form-section">
+                <h4>Add New Entry</h4>
+                <form id="entryForm">
+                    <input type="hidden" id="editingEntryId">
+                    <div class="form-group" id="entryDateGroup"> <!-- NEW: Added ID for date group -->
+                        <label for="entryDate">Date</label>
+                        <input type="date" id="entryDate" class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3"> <!-- NEW: Date input -->
+                    </div>
+                    <div class="form-group">
+                        <label for="entryType">Entry Type</label>
+                        <select id="entryType">
+                            <option value="none">-- Select Type --</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                            <!-- Add other types if needed, e.g., <option value="task">Task</option> -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryTitle">Title</label>
+                        <input type="text" id="entryTitle" placeholder="e.g., Sale of Product A">
+                    </div>
+                    <div class="form-group" id="entryAmountGroup">
+                        <label for="entryAmount">Amount (RM)</label>
+                        <input type="number" id="entryAmount" step="0.01" placeholder="0.00">
+                    </div>
+                </form>
+                <div class="modal-actions">
+                    <button type="button" class="close-btn" id="cancelEntryButton">Close</button> <!-- MODIFIED: Added ID -->
+                    <button type="button" class="add-btn" id="saveEntryButton">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spending Insights Modal -->
+    <div id="spendingInsightsModal" class="modal">
+        <!-- ... existing insights modal ... -->
+    </div>
+
+    <!-- === NEW GOAL MODAL === -->
+    <div id="goal-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 hidden">
+        <div id="goal-sidebar" class="sidebar-panel fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-lg border-l border-gray-200 z-50 transform translate-x-full flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h2 id="goal-modal-title" class="text-lg font-semibold text-gray-800">Set Monthly Goal</h2>
+                <button id="close-goal-btn" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 flex-grow">
+                <label for="goal-amount" class="block text-sm font-medium text-gray-700">Goal Amount (RM)</label>
+                <div class="mt-1">
+                    <input type="number" name="goal-amount" id="goal-amount" class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3" placeholder="10000">
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                <button id="cancel-goal-btn" class="bg-white py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button id="save-goal-btn" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700">Save Goal</button>
+            </div>
+        </div>
+    </div>
+    <!-- Project Form Modal -->
+<div id="projectFormModal" class="hidden fixed inset-0 z-50">
+    <div id="project-modal-overlay" class="absolute inset-0 bg-gray-900 bg-opacity-50 transition-opacity duration-300 ease-in-out opacity-0"></div>
+    <div id="projectSidebar" class="sidebar-panel fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-lg border-l border-gray-200 z-50 transform translate-x-full flex flex-col">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+            <div>
+                <h2 id="project-modal-title" class="text-lg font-semibold text-gray-800">Add New Project</h2>
+                <p id="project-modal-contact-name" class="text-sm text-gray-500">For contact: </p>
+            </div>
+            <button id="project-modal-close-btn" class="text-gray-500 hover:text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="p-6 flex-grow overflow-y-auto bg-gray-50">
+            <form id="project-form" class="space-y-6">
+                <!-- Project Name -->
+                <div>
+                    <label for="projectName" class="block text-sm font-medium text-gray-700">Project Name *</label>
+                    <input type="text" name="projectName" id="projectName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+
+                <!-- Project Description -->
+                <div>
+                    <label for="projectDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="projectDescription" id="projectDescription" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"></textarea>
+                </div>
+
+                <!-- Initial Status -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Project Status</label>
+                    <div id="projectStatusButtons" class="flex flex-wrap gap-2">
+                        <!-- Buttons will be dynamically generated by JS -->
+                    </div>
+                    <input type="hidden" name="status" id="initialStatus">
+                </div>
+
+                <!-- Amount Field (conditional) -->
+                <div id="amount-field-container" class="field-transition field-hidden">
+                    <label for="total_amount" class="block text-sm font-medium text-gray-700">Total Amount (RM)</label>
+                    <input type="number" name="total_amount" id="total_amount" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+
+                <!-- Target Date (conditional) -->
+                <div id="target-date-field-container" class="field-transition field-hidden">
+                    <label for="target_date" class="block text-sm font-medium text-gray-700">Target Date</label>
+                    <input type="date" name="target_date" id="target_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+
+                <!-- Payment Schedule (conditional) -->
+                <div id="payment-schedule-container" class="field-transition field-hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Payment Schedule</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center">
+                            <input type="radio" name="paymentType" value="full" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                            <span class="ml-2 text-sm text-gray-700">Full Payment</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="paymentType" value="staggered" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                            <span class="ml-2 text-sm text-gray-700">Staggered Payment</span>
+                        </label>
+                    </div>
+
+                    <!-- Full Payment Details -->
+                    <div id="full-payment-details" class="field-transition field-hidden mt-4">
+                        <label for="full_payment_date" class="block text-sm font-medium text-gray-700">Due Date</label>
+                        <input type="date" name="full_payment_date" id="full_payment_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        <!-- NEW: Checkbox for full payment completion -->
+                        <div class="mt-4 flex items-center">
+                            <input id="full-payment-completed" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <label for="full-payment-completed" class="ml-2 block text-sm text-gray-700">Mark as Paid</label>
+                        </div>
+                    </div>
+
+                    <!-- Staggered Payment Details -->
+                    <div id="staggered-payment-details" class="field-transition field-hidden mt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Payment Milestones</label>
+                            <button type="button" id="add-milestone-btn" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Add Milestone</button>
+                        </div>
+                        <div id="staggered-payment-details-list" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Tasks -->
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="block text-sm font-medium text-gray-700">Tasks</label>
+                        <button type="button" id="add-task-btn" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Add Task</button>
+                    </div>
+                    <div id="task-list" class="space-y-2"></div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+            <button id="project-modal-cancel-btn" type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+            <button id="project-modal-save-btn" type="submit" form="project-form" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700">Save Project</button>
+        </div>
+    </div>
+</div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,524 @@
+/* ===================================================================
+   CONTACTS PAGE UI FIX
+   This file corrects the layout and styling for the main contacts list page.
+   =================================================================== */
+
+/* --- Main Contacts Page Container --- */
+.contacts-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* --- Page Header --- */
+.contacts-page-header {
+    margin-bottom: 2rem;
+}
+
+.contacts-page-header h1 {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.contacts-page-header p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+/* --- Contacts Toolbar --- */
+.contacts-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+/* --- Search Container --- */
+.contacts-search-container {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px; /* Limit max width of search bar */
+}
+
+.contacts-search-container .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem; /* 20px */
+    height: 1.25rem; /* 20px */
+    color: #9ca3af; /* gray-400 */
+}
+
+.contacts-search-container .search-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+#contact-search {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Left padding for icon */
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+#contact-search:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+/* --- New Contact Button --- */
+.contacts-toolbar .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.contacts-toolbar .btn-primary:hover {
+    background-color: #4338ca;
+}
+
+/* --- Contact List --- */
+.contact-list-container {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.contact-list-header,
+.contact-list-row {
+    display: grid;
+    grid-template-columns: 60px 2fr 1.5fr 1fr; /* Avatar, Info, Projects, Actions */
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+.contact-list-header {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.contact-list-row {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.contact-list-row:last-child {
+    border-bottom: none;
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e7ff;
+    color: #3730a3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.contact-info .contact-name-link {
+    font-weight: 600;
+    color: #111827;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.contact-info .contact-name-link:hover {
+    color: #4f46e5;
+}
+
+.contact-info p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.contact-row-projects .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background-color: #eef2ff;
+    color: #4338ca;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.contact-row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.contact-row-actions .btn-icon {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.contact-row-actions .btn-icon:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.contact-row-actions .btn-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* --- Contact Form Sidebar Panel --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.contact-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Start off-screen */
+    width: 400px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease;
+}
+
+.contact-sidebar.is-active {
+    right: 0;
+}
+
+.contact-sidebar .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.contact-sidebar .sidebar-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.contact-sidebar .sidebar-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0.5rem;
+}
+.contact-sidebar .sidebar-close-btn:hover {
+    color: #1f2937;
+}
+
+.contact-sidebar .sidebar-content {
+    flex-grow: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.contact-sidebar .sidebar-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.contact-sidebar .sidebar-form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.contact-sidebar .sidebar-form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.contact-sidebar .sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: #f9fafb;
+}
+
+.contact-sidebar .sidebar-btn-secondary,
+.contact-sidebar .sidebar-btn-primary {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.contact-sidebar .sidebar-btn-secondary {
+    background-color: white;
+    border-color: #d1d5db;
+}
+
+.contact-sidebar .sidebar-btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+#contact-projects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+#contact-projects-container .card {
+    all: unset;
+    display: block;
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+#contact-projects-container .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+    border-color: #a5b4fc;
+    transform: translateY(-2px);
+}
+
+#contact-projects-container .card:last-child {
+    margin-bottom: 0;
+}
+
+/* Project header */
+#contact-projects-container .card .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+#contact-projects-container .card .project-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+#contact-projects-container .card .project-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Status colors */
+#contact-projects-container .card .project-status.inquiry {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+#contact-projects-container .card .project-status.quotation {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+#contact-projects-container .card .project-status.invoice {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+#contact-projects-container .card .project-status.half-paid {
+    background-color: #fde68a;
+    color: #92400e;
+}
+
+#contact-projects-container .card .project-status.fully-paid {
+    background-color: #bbf7d0;
+    color: #047857;
+}
+
+/* Project details */
+#contact-projects-container .card .project-details {
+    display: flex;
+    gap: 1.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+#contact-projects-container .card .project-amount {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Add New Project Button */
+#contact-projects-container .add-project-btn {
+    border: 2px dashed #d1d5db;
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+}
+
+#contact-projects-container .add-project-btn:hover {
+    border-color: #4f46e5;
+    background-color: #f0f9ff;
+    color: #4f46e5;
+}
+
+#contact-projects-container .add-project-btn .plus-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-size: 1.25rem;
+}
+
+/* Empty state */
+#contact-projects-container .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+#contact-projects-container .empty-state .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    opacity: 0.5;
+}
+/* ===================================================================
+   CONTACTS PAGE UI FIX
+   This file corrects the layout and styling for the main contacts list page.
+   =================================================================== */
+
+/* --- Main Contacts Page Container --- */
+.contacts-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* ... existing styles ... */
+
+.contact-row-actions .btn-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* --- Contact Form Sidebar Panel --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.contact-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Start off-screen */
+    width: 400px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease;
+}
+
+.contact-sidebar.is-active {
+    right: 0;
+}
+
+/* ... other existing styles ... */
+
+/* ===================================================================
+   PROJECT FORM MODAL ANIMATIONS (NEW)
+   =================================================================== */
+
+#projectFormModal #project-modal-overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#projectFormModal.hidden #project-modal-overlay {
+    opacity: 0;
+}
+
+#projectFormModal #projectSidebar {
+    transition: transform 0.3s ease-in-out;
+}
+
+#projectFormModal.hidden #projectSidebar {
+    transform: translateX(100%);
+}
